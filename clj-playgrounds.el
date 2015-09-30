@@ -17,12 +17,20 @@
   :link '(url-link :tag "Github" "https://github.com/cthulhu-bot/clj-playgrounds")
   :link '(emacs-commentary-link :tag "Commentary" "cider"))
 
-(defun foo ()
-  "Prints foo"
+(defun create-and-switch-to-buffer (buffer-name)
   (interactive)
-  (print "Hello foo"))
+  (setq new-buffer (get-buffer-create buffer-name))
+  (switch-to-buffer new-buffer))
 
-(global-set-key (kbd "C-x C-]") (print "wtf"))
+(defun split-current-and-switch-to-window ()
+  (interactive)
+  (setq new-window (split-window-right))
+  (select-window new-window))
+
+(defun playground-init ()
+  (interactive)
+  (split-current-and-switch-to-window)
+  (create-and-switch-to-buffer "clj-playground"))
 
 (defun append-to-buffer (buffer start end)
   (interactive "BAppend to buffer: \nr")
@@ -30,8 +38,16 @@
     (with-current-buffer (get-buffer-create buffer)
       (insert-buffer-substring oldbuf start end))))
 
-(defun create-and-switch-to-buffer (buffer-name)
-  (setq new-buffer (get-buffer-create buffer-name))
-  (switch-to-buffer-other-window new-buffer))
+(global-set-key (kbd "C-x C-]")
+                (lambda () (interactive) (playground-init)))
 
-(create-and-switch-to-buffer "new-buffer")
+(defun write-test-output ()
+  (interactive)
+  (playground-init)
+  (switch-to-buffer "clj-playground")
+  (print "wtf"))
+
+(selected-window)
+(selected-frame)
+(window-total-width (selected-window))
+(window-resize (selected-window) 50)
