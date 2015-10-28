@@ -45,9 +45,6 @@
   (interactive)
   (playground-init)
   (switch-to-buffer "clj-playground")
-  (print "wtf"))
-
-(selected-window)
-(selected-frame)
-(window-total-width (selected-window))
-(window-resize (selected-window) 50)
+  (let ((s "foo bar"))
+    (put-text-property 0 (length s) 'face 'bold s)
+    (insert s)))
